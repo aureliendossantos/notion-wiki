@@ -19,9 +19,9 @@ export default function Home({ categories, pages, results, page_blockmap }) {
                             .filter(page => page.category == category.id)
                             .sort((a,b) => new Date(a.edited_time) - new Date(b.edited_time))
                             .map(page => {
-                                const slug = slugify(page.title)
-                                return <Link href={`/${slug}`}>
-                                    <li key={slug}><a href={`/${slug}`}>{page.title}</a></li>
+                                const slug = slugify(page.title, {remove: /[*+~.()'"!:@]/g})
+                                return <Link key={slug} href={`/${slug}`}>
+                                    <li><a href={`/${slug}`}>{page.title}</a></li>
                                 </Link>
                             }
                         )}

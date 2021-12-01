@@ -35,7 +35,7 @@ export async function getStaticPaths() {
     const paths = data.results.map(page => {
         return {
             params: {
-                slug: slugify(page.properties.Nom.title[0].plain_text)
+                slug: slugify(page.properties.Nom.title[0].plain_text, {remove: /[*+~.()'"!:@]/g})
             }
         }
     })
@@ -66,7 +66,7 @@ export async function getStaticProps({ params: { slug } }) {
     }
 
     const page = data.results.find(result => {
-        return slugify(result.properties.Nom.title[0].plain_text) === slug
+        return slugify(result.properties.Nom.title[0].plain_text, {remove: /[*+~.()'"!:@]/g}) === slug
     })
 
     const notionAlt = new NotionAPI()
