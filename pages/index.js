@@ -1,8 +1,15 @@
 import { Client } from "@notionhq/client"
 
-export default function Home({ categories, pages, results }) {
+import Link from "next/link"
+import slugify from "slugify"
+
+import { NotionAPI } from 'notion-client'
+import { NotionRenderer } from 'react-notion-x'
+
+export default function Home({ categories, pages, results, page_blockmap }) {
     return (
         <>
+            {/*<NotionRenderer recordMap={page_blockmap} fullPage={false} darkMode={false} />*/}
             {categories.map(category => (
                 <>
                     <h2>{category.title}</h2>
@@ -11,9 +18,12 @@ export default function Home({ categories, pages, results }) {
                         {pages
                             .filter(page => page.category == category.id)
                             .sort((a,b) => new Date(a.edited_time) - new Date(b.edited_time))
-                            .map(page => (
-                                <li key={page.id}><a href={page.url}>{page.title}</a></li>
-                            )
+                            .map(page => {
+                                const slug = slugify(page.title)
+                                return <Link href={`/${slug}`}>
+                                    <li key={slug}><a href={`/${slug}`}>{page.title}</a></li>
+                                </Link>
+                            }
                         )}
                     </ul>
                 </>
@@ -27,6 +37,10 @@ export async function getStaticProps() {
     const notion = new Client({
         auth: process.env.NOTION_SECRET
     })
+
+    const notionAlt = new NotionAPI()
+
+    const page_blockmap = await notionAlt.getPage('f9a884164a1a45bdbbac2ddfff650555')
 
     let resultsC = []
     let dataC = await notion.databases.query({
@@ -61,7 +75,6 @@ export async function getStaticProps() {
     const pages = results.map(page => ({
         id: page.id,
         title: page.properties.Nom.title[0].plain_text,
-        url: page.url,
         category: page.properties.Catégorie.relation[0].id,
         edited_time: page.last_edited_time
     }))
@@ -71,6 +84,7 @@ export async function getStaticProps() {
             categories,
             pages,
             results,
+            page_blockmap
         },
         revalidate: 60
     }
