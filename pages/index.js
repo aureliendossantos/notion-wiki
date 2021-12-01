@@ -71,6 +71,7 @@ export async function getStaticProps() {
             categories,
             pages,
             results,
-        }
+        },
+        revalidate: 60
     }
 }
