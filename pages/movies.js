@@ -8,7 +8,7 @@ export default function Movies({ movies, results, games }) {
             <pre>{JSON.stringify(games, null, 2)}</pre>
             <img src={"https://images.igdb.com/igdb/image/upload/t_cover_big/" + games[0].cover.image_id + ".jpg"}></img>
             {games[0].screenshots.map(screenshot => (
-                <img src={"https://images.igdb.com/igdb/image/upload/t_thumb/" + screenshot.image_id + ".jpg"}></img>
+                <img key={screenshot.image_id} src={"https://images.igdb.com/igdb/image/upload/t_thumb/" + screenshot.image_id + ".jpg"}></img>
             ))}
             <p>Longueur : {movies.length}</p>
             {movies.map(item => (

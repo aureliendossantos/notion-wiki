@@ -12,7 +12,7 @@ export default function Movies({ categories, pages, results }) {
                             .filter(page => page.category == category.id)
                             .sort((a,b) => new Date(a.edited_time) - new Date(b.edited_time))
                             .map(page => (
-                                <li><a href={page.url}>{page.title}</a></li>
+                                <li key={page.id}><a href={page.url}>{page.title}</a></li>
                             )
                         )}
                     </ul>
