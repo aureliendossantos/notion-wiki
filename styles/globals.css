@@ -1,16 +1,36 @@
-html,
 body {
-  padding: 0;
+  padding: 0 10px;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: monospace;
+  background-color: #111;
+  color: #ddd;
+  white-space: pre-line;
+  max-width: 620px;
 }
 
 a {
   color: inherit;
-  text-decoration: none;
 }
 
 * {
   box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+}
+
+code, pre {
+  background-color: rgb(63, 63, 63);
+  border-radius: 3px;
+  padding: 0 3px;
+  margin: 0 -3px;
+}
+
+pre {
+  background-color: rgb(43, 43, 43);
+}
+
+.error {
+  color: darkred;
 }

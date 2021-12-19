@@ -3,13 +3,9 @@ import { Client } from "@notionhq/client"
 import Link from "next/link"
 import slugify from "slugify"
 
-import { NotionAPI } from 'notion-client'
-import { NotionRenderer } from 'react-notion-x'
-
-export default function Home({ categories, pages, results, page_blockmap }) {
+export default function Home({ categories, pages, results }) {
     return (
         <>
-            {/*<NotionRenderer recordMap={page_blockmap} fullPage={false} darkMode={false} />*/}
             {categories.map(category => (
                 <>
                     <h2>{category.title}</h2>
@@ -28,7 +24,10 @@ export default function Home({ categories, pages, results, page_blockmap }) {
                     </ul>
                 </>
             ))}
-            <pre>{JSON.stringify(results, null, 2)}</pre>
+            {process.env.NODE_ENV == "development" ?
+                <pre>{JSON.stringify(results, null, 2)}</pre>
+            : null
+            }
         </>
     )
 }
@@ -37,10 +36,6 @@ export async function getStaticProps() {
     const notion = new Client({
         auth: process.env.NOTION_SECRET
     })
-
-    const notionAlt = new NotionAPI()
-
-    const page_blockmap = await notionAlt.getPage('f9a884164a1a45bdbbac2ddfff650555')
 
     let resultsC = []
     let dataC = await notion.databases.query({
@@ -83,8 +78,7 @@ export async function getStaticProps() {
         props: {
             categories,
             pages,
-            results,
-            page_blockmap
+            results
         },
         revalidate: 60
     }

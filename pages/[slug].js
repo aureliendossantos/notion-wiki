@@ -2,14 +2,25 @@ import Link from "next/link"
 import slugify from "slugify"
 
 import { Client } from '@notionhq/client'
+import PageRender from "../components/PageRender"
 
-import { NotionAPI } from 'notion-client'
-import { NotionRenderer } from 'react-notion-x'
-
-export default function Page({ page_blockmap }) {
+export default function Page({ page, blocks }) {
     return (
         <>
-            <NotionRenderer recordMap={page_blockmap} fullPage={true} />
+            <h1>{page.properties.Nom.title[0].plain_text}</h1>
+            {page.properties.Description.rich_text[0] ?
+                <p>{page.properties.Description.rich_text[0].plain_text}</p>
+                : null
+            }
+            <PageRender blocks={blocks} />
+            {process.env.NODE_ENV == "development" ?
+                <>
+                    <hr/>
+                    <h1>Source</h1>
+                    <pre>{JSON.stringify(blocks, null, 2)}</pre>
+                </>
+            : null
+            }
         </>
     )
 }
@@ -69,12 +80,26 @@ export async function getStaticProps({ params: { slug } }) {
         return slugify(result.properties.Nom.title[0].plain_text, {remove: /[*+~.()'"!:@]/g}) === slug
     })
 
-    const notionAlt = new NotionAPI()
-    const page_blockmap = await notionAlt.getPage(page.id)
+    let blocks = []
+    let query = await notion.blocks.children.list({
+        block_id: page.id
+    })
+    blocks = [...query.results]
+    while (query.has_more) {
+        query = await notion.blocks.children.list({
+            block_id: page.id,
+            start_cursor: query.next_cursor
+        })
+        blocks = [...blocks, ...query.results]
+    }
+
+    //"next_cursor": "49bb65f6-4e75-4944-8496-8627a7bc72a9",
+    //"has_more": true
 
     return {
         props: {
-            page_blockmap
+            page: page,
+            blocks: blocks
         },
         revalidate: 60
     }
