@@ -1,7 +1,9 @@
 import TextRender from "./TextRender";
 
 export default function PageRender(blocks) {
-    return blocks.blocks.map(block => {
+    let bulleted_list = []
+    let numbered_list = []
+    return blocks.blocks.map((block, index, blocks) => {
         switch (block.type) {
             case "heading_1":
                 return <h2>{block.heading_1.text[0].plain_text}</h2>
@@ -31,9 +33,35 @@ export default function PageRender(blocks) {
                     {block.image.caption[0] ? <figcaption><TextRender text={block.image.caption} /></figcaption> : null}
                 </figure>
             case "bulleted_list_item":
-                return <li><TextRender text={block.bulleted_list_item.text} /></li>
+                bulleted_list.push(block.bulleted_list_item.text)
+                if (blocks[index+1] && blocks[index+1].type == "bulleted_list_item") {
+                    return null
+                } else {
+                    const toRender = bulleted_list
+                    bulleted_list = []
+                    return <ul>
+                        {toRender.map(item => <li><TextRender text={item} /></li>)}
+                    </ul>
+                }
+            case "numbered_list_item":
+                numbered_list.push(block.numbered_list_item.text)
+                if (blocks[index+1] && blocks[index+1].type == "numbered_list_item") {
+                    return null
+                } else {
+                    const toRender = numbered_list
+                    numbered_list = []
+                    return <ol>
+                        {toRender.map(item => <li><TextRender text={item} /></li>)}
+                    </ol>
+                }
+            case "callout":
+                return <p className="callout"><TextRender text={block.callout.text} /></p>
+            case "link_preview":
+                return <a className="link_preview" href={block.link_preview.url}><p>{block.link_preview.url}</p></a>
             case "table_of_contents":
                 return <p className="error">Table of contents needed.</p>
+            case "unsupported":
+                return <p className="error">Erreur : Bloc non supporté par l'API.</p>
             default:
                 return <>
                     <p className="error">Bloc non supporté :</p>

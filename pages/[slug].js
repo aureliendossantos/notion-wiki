@@ -1,10 +1,15 @@
+import { useRouter } from 'next/router'
 import Link from "next/link"
 import slugify from "slugify"
 
 import { Client } from '@notionhq/client'
 import PageRender from "../components/PageRender"
 
-export default function Page({ page, blocks }) {
+export default function Page({ page, fullList: blocks, children }) {
+    const router = useRouter()
+    if (router.isFallback) {
+        return <h1>Chargement...</h1>
+    }
     return (
         <>
             <h1>{page.properties.Nom.title[0].plain_text}</h1>
@@ -53,7 +58,7 @@ export async function getStaticPaths() {
 
     return {
         paths,
-        fallback: false
+        fallback: true
     }
 }
 
@@ -93,13 +98,10 @@ export async function getStaticProps({ params: { slug } }) {
         blocks = [...blocks, ...query.results]
     }
 
-    //"next_cursor": "49bb65f6-4e75-4944-8496-8627a7bc72a9",
-    //"has_more": true
-
     return {
         props: {
-            page: page,
-            blocks: blocks
+            page,
+            blocks
         },
         revalidate: 60
     }
