@@ -5,7 +5,7 @@ import slugify from "slugify"
 import { Client } from '@notionhq/client'
 import PageRender from "../components/PageRender"
 
-export default function Page({ page, fullList: blocks, children }) {
+export default function Page({ page, blocks }) {
     const router = useRouter()
     if (router.isFallback) {
         return <h1>Chargement...</h1>

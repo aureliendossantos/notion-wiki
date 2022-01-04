@@ -40,7 +40,7 @@ export default function PageRender(blocks) {
                     const toRender = bulleted_list
                     bulleted_list = []
                     return <ul>
-                        {toRender.map(item => <li><TextRender text={item} /></li>)}
+                        {toRender.map((item, index) => <li key={index}><TextRender text={item} /></li>)}
                     </ul>
                 }
             case "numbered_list_item":
@@ -51,7 +51,7 @@ export default function PageRender(blocks) {
                     const toRender = numbered_list
                     numbered_list = []
                     return <ol>
-                        {toRender.map(item => <li><TextRender text={item} /></li>)}
+                        {toRender.map((item, index) => <li key={index}><TextRender text={item} /></li>)}
                     </ol>
                 }
             case "callout":
@@ -61,7 +61,7 @@ export default function PageRender(blocks) {
             case "table_of_contents":
                 return <p className="error">Table of contents needed.</p>
             case "unsupported":
-                return <p className="error">Erreur : Bloc non supporté par l'API.</p>
+                return <p className="error">{"Erreur : Bloc non supporté par l'API."}</p>
             default:
                 return <>
                     <p className="error">Bloc non supporté :</p>
