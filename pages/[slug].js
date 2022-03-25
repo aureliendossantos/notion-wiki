@@ -3,7 +3,8 @@ import Link from "next/link"
 import slugify from "slugify"
 
 import { Client } from '@notionhq/client'
-import PageRender from "../components/PageRender"
+import PageRender from "/components/PageRender"
+import getChildren from '/functions/getChildren'
 
 export default function Page({ page, blocks }) {
     const router = useRouter()
@@ -85,18 +86,18 @@ export async function getStaticProps({ params: { slug } }) {
         return slugify(result.properties.Nom.title[0].plain_text, {remove: /[*+~.()'"!:@]/g}) === slug
     })
 
-    let blocks = []
-    let query = await notion.blocks.children.list({
-        block_id: page.id
-    })
-    blocks = [...query.results]
-    while (query.has_more) {
-        query = await notion.blocks.children.list({
-            block_id: page.id,
-            start_cursor: query.next_cursor
-        })
-        blocks = [...blocks, ...query.results]
-    }
+    const pageChildren = await getChildren(page.id)
+    const blocks = await Promise.all(pageChildren.map(async (block) => {
+        if (block.has_children) {
+            const children = await getChildren(block.id)
+            return {
+                ...block,
+                children: children
+            }
+        } else {
+            return block
+        }
+    }))
 
     return {
         props: {

@@ -58,6 +58,24 @@ export default function PageRender(blocks) {
                 return <p className="callout"><TextRender text={block.callout.text} /></p>
             case "link_preview":
                 return <a className="link_preview" href={block.link_preview.url}><p>{block.link_preview.url}</p></a>
+            case "bookmark":
+                return <a className="link_preview" href={block.bookmark.url}><p>{block.bookmark.url}</p></a>
+            case "table":
+                return <table>
+                    <tbody>
+                        {block.children.map((row, row_index) => {
+                            return <tr key={row.id}>
+                                {row.table_row.cells.map((cell, cell_index) => {
+                                    if ((row_index == 0 && block.table.has_column_header) || (cell_index == 0 && block.table.has_row_header)) {
+                                        return <th><TextRender text={cell} /></th>
+                                    } else {
+                                        return <td><TextRender text={cell} /></td>
+                                    }
+                                })}
+                            </tr>
+                        })}
+                    </tbody>
+                </table>
             case "table_of_contents":
                 return <p className="error">Table of contents needed.</p>
             case "unsupported":

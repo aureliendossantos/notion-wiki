@@ -35,7 +35,7 @@ pre {
   color: darkred;
 }
 
-.callout, a.link_preview p {
+.callout, a.link_preview p, table {
   border: solid 1px rgb(180, 180, 180);
   border-radius: 3px;
   padding: 10px;
@@ -48,4 +48,9 @@ a.link_preview:hover p {
 
 a.link_preview {
   text-decoration: none;
+}
+
+tr:not(:last-child) td, tr:not(:last-child) th {
+  padding-bottom: 4px;
+  border-bottom: solid 1px rgb(180, 180, 180);
 }
