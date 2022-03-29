@@ -15,6 +15,9 @@ export default function TextRender(text) {
                 if (text.annotations.code) {
                     result = <code>{result}</code>
                 }
+                if (text.annotations.strikethrough) {
+                    result = <s>{result}</s>
+                }
                 return result
             case "mention":
                 return <pre>{JSON.stringify(text, null, 2)}</pre>

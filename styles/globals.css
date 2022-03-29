@@ -35,7 +35,7 @@ pre {
   color: darkred;
 }
 
-.callout, a.link_preview p, table {
+.callout, a.link_preview p, .table-of-contents {
   border: solid 1px rgb(180, 180, 180);
   border-radius: 3px;
   padding: 10px;
@@ -50,7 +50,51 @@ a.link_preview {
   text-decoration: none;
 }
 
-tr:not(:last-child) td, tr:not(:last-child) th {
-  padding-bottom: 4px;
-  border-bottom: solid 1px rgb(180, 180, 180);
+.column-container {
+  display: flex;
+}
+
+.table-of-contents li {
+  list-style: none;
+}
+
+.table-of-contents li a:not(:hover) {
+  text-decoration: none;
+}
+
+.table-of-contents ul {
+  margin: none;
+  padding-left: 20px;
+  border-left: solid 1px rgb(78, 78, 78);
+}
+
+table {
+  background-color: rgb(43, 43, 43);
+  border-collapse: collapse;
+  border-radius: 3px;
+  overflow:hidden;
+  border: solid 1px red;
+  box-shadow:0 0 0 1px rgb(180, 180, 180);
+  padding: 10px;
+}
+
+th, td {
+  padding: 4px;
+  border: solid 1px rgb(78, 78, 78);
+}
+
+td:first-child, th:first-child {
+  padding-left: 10px;
+}
+
+td:last-child, th:last-child {
+  padding-right: 10px;
+}
+
+tr:first-child td, tr:first-child th {
+  padding-top: 10px;
+}
+
+tr:last-child td, tr:last-child th {
+  padding-bottom: 10px;
 }

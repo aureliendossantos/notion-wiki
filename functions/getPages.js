@@ -22,5 +22,5 @@ export default async function getPages() {
         category: page.properties.Catégorie.relation[0].id,
         edited_time: page.last_edited_time
     }))
-    return { pages, results }
+    return pages
 }

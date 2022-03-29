@@ -6,11 +6,11 @@ export default function PageRender(blocks) {
     return blocks.blocks.map((block, index, blocks) => {
         switch (block.type) {
             case "heading_1":
-                return <h2>{block.heading_1.text[0].plain_text}</h2>
+                return <h2 id={block.id}>{block.heading_1.text[0].plain_text}</h2>
             case "heading_2":
-                return <h3>{block.heading_2.text[0].plain_text}</h3>
+                return <h3 id={block.id}>{block.heading_2.text[0].plain_text}</h3>
             case "heading_3":
-                return <h4>{block.heading_3.text[0].plain_text}</h4>
+                return <h4 id={block.id}>{block.heading_3.text[0].plain_text}</h4>
             case "paragraph":
                 return <p><TextRender text={block.paragraph.text} /></p>
             case "quote":
@@ -18,7 +18,7 @@ export default function PageRender(blocks) {
             case "code":
                 return <pre><TextRender text={block.code.text} /></pre>
             case "to_do":
-                return <p><input type="checkbox" readOnly="readonly" />{block.to_do.text[0].plain_text}</p>
+                return <p><input type="checkbox" checked={block.to_do.checked} readOnly="readonly" /><TextRender text={block.to_do.text} /></p>
             case "image":
                 return <figure>
                     {block.image.type == "external" ?
@@ -76,8 +76,29 @@ export default function PageRender(blocks) {
                         })}
                     </tbody>
                 </table>
+            case "column_list":
+                return <div className="column-container">
+                    {block.children.map(column => {
+                        return <div className="column">
+                            <PageRender blocks={column.children} />
+                        </div>
+                    })}
+                </div>
             case "table_of_contents":
-                return <p className="error">Table of contents needed.</p>
+                return <ul className="table-of-contents">
+                    {blocks.map(block => {
+                        switch (block.type) {
+                            case "heading_1":
+                                return <li><a href={"#" + block.id}>{block.heading_1.text[0].plain_text}</a></li>
+                            case "heading_2":
+                                return <ul><li><a href={"#" + block.id}>{block.heading_2.text[0].plain_text}</a></li></ul>
+                            case "heading_3":
+                                return <ul><ul><li><a href={"#" + block.id}>{block.heading_3.text[0].plain_text}</a></li></ul></ul>
+                            default:
+                                return null
+                        }
+                    })}
+                </ul>
             case "unsupported":
                 return <p className="error">{"Erreur : Bloc non supporté par l'API."}</p>
             default:

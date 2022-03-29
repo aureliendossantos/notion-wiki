@@ -25,16 +25,21 @@ export default async function getPage(slug) {
     })
 
     const pageChildren = await getChildren(page.id)
-    const blocks = await Promise.all(pageChildren.map(async (block) => {
-        if (block.has_children) {
-            const children = await getChildren(block.id)
-            return {
-                ...block,
-                children: children
+    async function recursivelyGetChildren(blocks) {
+        const result = await Promise.all(blocks.map(async (block) => {
+            if (block.has_children) {
+                const children = await getChildren(block.id)
+                const recursiveChildren = await recursivelyGetChildren(children)
+                return {
+                    ...block,
+                    children: recursiveChildren
+                }
+            } else {
+                return block
             }
-        } else {
-            return block
-        }
-    }))
+        }))
+        return result
+    }
+    const blocks = await recursivelyGetChildren(pageChildren)
     return { page, blocks }
 }
