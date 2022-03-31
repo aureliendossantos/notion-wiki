@@ -79,7 +79,7 @@ export default function PageRender(blocks) {
             case "column_list":
                 return <div className="column-container">
                     {block.children.map(column => {
-                        return <div className="column">
+                        return <div className="column" key={column.id}>
                             <PageRender blocks={column.children} />
                         </div>
                     })}

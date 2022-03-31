@@ -30,7 +30,7 @@ function Category({ category }) {
                 .sort((a,b) => new Date(a.edited_time) - new Date(b.edited_time))
                 .map(page => {
                     const slug = slugify(page.title, {remove: /[*+~.()'"!:@]/g})
-                    return <Link key={slug} href={`/${slug}`}>
+                    return <Link key={slug} href={`/${slug}`} passHref>
                         <li><a href={`/${slug}`}>{page.title}</a></li>
                     </Link>
                 }
